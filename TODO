@@ -1,0 +1,6 @@
+- Could resolve OIDs to numeric values for ease of deployment, but
+  MIBs are a Good Thing.
+- http://search.cpan.org/~bevo/POE-Component-TFTPd-0.0302/lib/POE/Component/TFTPd.pm
+  Could use POE TFTPd.
+- Could use POE to watch the syslog socket
+- Converting to POE makes it all self contained.

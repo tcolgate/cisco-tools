@@ -1,0 +1,13 @@
+Some tools for managing Cisco routers.
+
+These scripts use SNMP to trigger cisco configuration push/pull rather than
+scripted SSH/telnet.
+
+CISCO-CONFI-COPY-MIB (and CISCO-SMI) MIBs must be installed. 
+You will also need a working TFTP server amd an SVN server to commit changes to.
+
+watch-switch-config.pl: Works with rsyslog to watch for config changes, intitiates a tftp and commits changes to SVN
+   watch-switch-config: init.d script for starting config watcher
+    snmp-get-config.pl: Uses SNMP to force a tftp push of a config file
+    snmp-put-config.pl: Uses SNMP to upload a chunk of config to the running config of a router.
+                  vim/: VIM Syntax highlighting for cisco router configs. 

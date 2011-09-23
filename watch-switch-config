@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# watch-switch-config: This starts and stops watch-switch-config.pl
+#
+# chkconfig: 3 12 88
+# description: watch-switch-config.pl watches rsyslog for cisco cofiguration changes
+# processname: watch-switch-config.pl
+# pidfile: /var/run/watch-switch-config.pl.pid
+### BEGIN INIT INFO
+# Provides: watch-switch-config.pl
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+CONFIGWATCH=/usr/local/scripts/watch-switch-config.pl
+LOCKF=/var/lock/subsys/watch-switch-config
+PIDF=/var/run/watch-switch-config.pl.pid
+
+[ -f $CONFIGWATCH ] || exit 0
+
+RETVAL=0
+
+case "$1" in
+  start)
+	echo -n $"Starting watch-switch-config: "
+	daemon $CONFIGWATCH
+        RETVAL=$?
+        PID=$!
+        echo
+        [ $RETVAL -eq 0 ] && touch $LOCKF
+
+        echo $PID > $PIDF
+	;;
+  stop)
+	echo -n $"Stopping watch-switch-config: "
+	killproc $CONFIGWATCH
+	RETVAL=$?
+        echo
+        if [ $RETVAL -eq 0 ]; then
+          rm -f $LOCKF
+          rm -f $PIDF
+        fi
+	;;
+  status)
+	status $CONFIGWATCH
+	RETVAL=$?
+        ;;
+  restart)
+	$0 stop
+	sleep 3
+	$0 start
+	RETVAL=$?
+	;;
+  condrestart)
+	if [ -f $LOCKF ]; then
+		$0 stop
+		sleep 3
+		$0 start
+		RETVAL=$?
+	fi
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|reload|condrestart}"
+	exit 1
+esac
+
+exit $RETVAL
