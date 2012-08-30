@@ -82,7 +82,7 @@ if ($copyState == 3) {
 
 my $destroy_vars = new SNMP::VarList(
  ["ccCopyEntryRowStatus" , $jobid , 6 ]);
-my @destroy_vals = $sess->get($destroy_vars) or die "Removal of copy job failed:\n" . $sess->ErrorStr;
+my @destroy_vals = $sess->set($destroy_vars) or die "Removal of copy job failed:\n" . $sess->ErrorStr;
 
 # rm $fqfilename
 unlink($fqfilename) or die "Failed to unlink tftp file";
