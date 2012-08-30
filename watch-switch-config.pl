@@ -77,9 +77,15 @@ while(1){
       syslog('info', "Configuration on $host updated by $user");
   
       # We can use this info to vary how we pull data, or where it gets stored.
-      my $sess = new SNMP::Session(DestHost => $fqdn,
-                                   Version => "2c",
-                                   Community => $rwcomm);
+      my ($sess, $sesserror) = new SNMP::Session(DestHost => $fqdn,
+                                                 Version => "2c",
+                                                 Community => $rwcomm);
+
+      unless($sess){
+	syslog('err', "SNMP::Session creation failed: $sesserror\n");
+        next;
+      };
+
       my $hostdetails_vars = new SNMP::VarList(
          ["sysName" , 0 ],
          ["sysLocation" , 0 ]);
